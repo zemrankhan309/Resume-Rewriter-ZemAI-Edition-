@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZemAI - Resume Rewriter</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Brand Section -->
+    <div class="brand-header">
+      <!-- Ensure the file in your folder is named logo.png -->
+      <img src="logo.png" alt="ZemAI" class="brand-logo">
+    </div>
+    
+    <h1>Resume Rewriter</h1>
+
+    <label for="resumeInput">Your Resume</label>
+    <textarea id="resumeInput" placeholder="Paste your current resume here..."></textarea>
+
+    <label for="jdInput">Job Description</label>
+    <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
+
+    <label for="apiKey">Settings</label>
+    <input 
+      type="password" 
+      id="apiKey" 
+      placeholder="Enter Gemini API Key" 
+    />
+
+    <button id="rewriteBtn">Rewrite Resume to Match Job Description</button>
+
+    <label for="outputResume">Rewritten Resume</label>
+    <textarea id="outputResume" readonly placeholder="Your optimized resume will appear here..."></textarea>
+
+    <button id="copyBtn">Copy Rewritten Resume</button>
+
+    <p class="note">
+      Your API key is stored locally in your browser. No data leaves your machine except for the direct request to the Gemini API.
+    </p>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

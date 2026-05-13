@@ -6,41 +6,56 @@
   <title>ZemAI - Resume Rewriter</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="container">
+
     <!-- Brand Section -->
     <div class="brand-header">
-      <!-- Ensure the file in your folder is named logo.png -->
       <img src="logo.png" alt="ZemAI" class="brand-logo">
     </div>
-    
+
     <h1>Resume Rewriter</h1>
 
+    <!-- Resume Input -->
     <label for="resumeInput">Your Resume</label>
     <textarea id="resumeInput" placeholder="Paste your current resume here..."></textarea>
 
+    <!-- Job Description Input -->
     <label for="jdInput">Job Description</label>
     <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
 
-    <label for="apiKey">Settings</label>
-    <input 
-      type="password" 
-      id="apiKey" 
-      placeholder="Enter Gemini API Key" 
-    />
+    <!-- API Key -->
+    <label for="apiKey">Gemini API Key</label>
+    <input type="password" id="apiKey" placeholder="Enter your Gemini API key" />
 
+    <!-- Rewrite Button -->
     <button id="rewriteBtn">Rewrite Resume to Match Job Description</button>
 
+    <!-- Output -->
     <label for="outputResume">Rewritten Resume</label>
     <textarea id="outputResume" readonly placeholder="Your optimized resume will appear here..."></textarea>
 
+    <!-- Action Buttons -->
     <button id="copyBtn">Copy Rewritten Resume</button>
+    <button id="downloadDocxBtn">Download as Word (.docx)</button>
+    <button id="openFullPageBtn">Open Full Page</button>
 
     <p class="note">
-      Your API key is stored locally in your browser. No data leaves your machine except for the direct request to the Gemini API.
+      Your API key is stored locally in your browser. No data leaves your machine except the direct request to Gemini.
     </p>
+
+    <!-- Hidden export container for Word -->
+    <div id="exportContainer" style="display:none; padding:20px; font-family:Inter, sans-serif;">
+      <h2 style="text-align:center; margin-bottom:20px;">Professional Resume</h2>
+      <div id="exportContent"></div>
+    </div>
+
   </div>
 
+  <!-- LOCAL scripts -->
+  <script src="docx.min.js"></script>
   <script src="popup.js"></script>
+
 </body>
 </html>

@@ -119,6 +119,25 @@ textarea:focus, input[type="password"]:focus {
   cursor: pointer;
 }
 
+/* New buttons for PDF + DOCX */
+#downloadPdfBtn, 
+#downloadDocxBtn {
+  width: 100%;
+  margin-top: 10px;
+  background: #ffffff;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#downloadPdfBtn:hover, 
+#downloadDocxBtn:hover {
+  background: #f1f5f9;
+}
+
 .note {
   margin-top: 24px;
   font-size: 10.5px;

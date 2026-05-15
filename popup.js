@@ -14,6 +14,7 @@ const outputBox = document.getElementById("outputBox");
 const copyBtn = document.getElementById("copyBtn");
 const downloadDocxBtn = document.getElementById("downloadDocxBtn");
 const openFullPageBtn = document.getElementById("openFullPageBtn");
+const openEditorBtn = document.getElementById("openEditorBtn"); // NEW BUTTON
 
 // ===============================
 // GEMINI CALL #1 — REWRITE RESUME
@@ -156,8 +157,15 @@ downloadDocxBtn.addEventListener("click", () => {
 });
 
 // ===============================
-// OPEN FULL ATS DASHBOARD
+// OPEN ATS DASHBOARD
 // ===============================
 openFullPageBtn.addEventListener("click", () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("fullpage.html") });
+});
+
+// ===============================
+// OPEN FULL PAGE EDITOR (NEW)
+// ===============================
+openEditorBtn.addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("editor.html") });
 });

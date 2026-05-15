@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ZemAI Full‑Page Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="editor.css" />
+</head>
+
+<body>
+  <div class="editor-root">
+
+    <!-- Header -->
+    <header class="editor-header">
+      <h1>ZemAI Resume Editor</h1>
+      <p>Rewrite, optimize, and analyze your resume with Gemini‑powered intelligence.</p>
+    </header>
+
+    <!-- Two‑Column Editor -->
+    <main class="editor-grid">
+
+      <!-- Resume Column -->
+      <section class="editor-card">
+        <h2>Your Resume</h2>
+        <textarea id="resumeInput" placeholder="Paste your resume here..."></textarea>
+      </section>
+
+      <!-- Job Description Column -->
+      <section class="editor-card">
+        <h2>Job Description</h2>
+        <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
+      </section>
+
+    </main>
+
+    <!-- Output Section -->
+    <section class="editor-output-card">
+      <h2>Rewritten Resume</h2>
+      <textarea id="outputBox" placeholder="Your rewritten resume will appear here..."></textarea>
+    </section>
+
+    <!-- Action Buttons -->
+    <footer class="editor-footer">
+      <button id="rewriteBtn" class="editor-btn primary">Rewrite Resume</button>
+      <button id="analyzeBtn" class="editor-btn secondary">Analyze with ATS</button>
+    </footer>
+
+  </div>
+
+  <script src="editor.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
   "name": "ZemAI Resume Rewriter + ATS Analyzer",
   "version": "1.0",
   "description": "Rewrite resumes, match job descriptions, and generate a full ATS analysis dashboard using Gemini.",
-  
+
   "permissions": [
     "storage",
     "tabs"
@@ -29,7 +29,10 @@
       "resources": [
         "fullpage.html",
         "fullpage.css",
-        "fullpage.js"
+        "fullpage.js",
+        "editor.html",
+        "editor.css",
+        "editor.js"
       ],
       "matches": ["<all_urls>"]
     }

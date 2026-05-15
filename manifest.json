@@ -26,10 +26,16 @@
       "resources": [
         "fullpage.html",
         "fullpage.css",
-        "fullpage.js",
+        {
+          "resource": "fullpage.js",
+          "type": "script"
+        },
         "editor.html",
         "editor.css",
-        "editor.js"
+        {
+          "resource": "editor.js",
+          "type": "script"
+        }
       ],
       "matches": ["<all_urls>"]
     }

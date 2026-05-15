@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ZemAI Full‑Page Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="editor.css" />
+</head>
+
+<body>
+  <div class="editor-root">
+
+    <header class="editor-header">
+      <h1>ZemAI Resume Editor</h1>
+      <p>Rewrite, optimize, and analyze your resume with Gemini‑powered intelligence.</p>
+    </header>
+
+    <section class="editor-card" style="margin: 32px;">
+      <h2>Gemini API Key</h2>
+      <input 
+        id="apiKeyInput" 
+        type="password" 
+        placeholder="Enter your Gemini API key..."
+        style="padding: 12px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"
+      />
+    </section>
+
+    <main class="editor-grid">
+      <section class="editor-card">
+        <h2>Your Resume</h2>
+        <textarea id="resumeInput" placeholder="Paste your resume here..."></textarea>
+      </section>
+
+      <section class="editor-card">
+        <h2>Job Description</h2>
+        <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
+      </section>
+    </main>
+
+    <section class="editor-output-card">
+      <h2>Rewritten Resume</h2>
+      <textarea id="outputBox" placeholder="Your rewritten resume will appear here..."></textarea>
+    </section>
+
+    <footer class="editor-footer">
+      <button id="rewriteBtn" class="editor-btn primary">Rewrite Resume</button>
+      <button id="copyBtn" class="editor-btn secondary">Copy</button>
+      <button id="downloadDocxBtn" class="editor-btn secondary">Download DOCX</button>
+      <button id="analyzeBtn" class="editor-btn secondary">Analyze with ATS</button>
+    </footer>
+
+  </div>
+
+  <!-- IMPORTANT: docx library must load BEFORE editor.js -->
+  <script src="docx.min.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>

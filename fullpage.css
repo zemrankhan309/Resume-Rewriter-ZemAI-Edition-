@@ -1,0 +1,262 @@
+/* ============================
+   GLOBAL THEME
+============================ */
+:root {
+  --gradient-start: #7c3aed;
+  --gradient-end: #06b6d4;
+  --bg-light: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 14px;
+  --shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-light);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-main);
+}
+
+/* ============================
+   HEADER
+============================ */
+.ats-header {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  padding: 32px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ats-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.ats-header p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.ats-badge {
+  background: rgba(255,255,255,0.2);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ============================
+   GRID LAYOUT
+============================ */
+.ats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  padding: 32px;
+}
+
+/* ============================
+   CARD BASE
+============================ */
+.ats-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.ats-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ats-card-subtitle {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ============================
+   SCORE RING
+============================ */
+.ats-score-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ats-score-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: conic-gradient(var(--gradient-start) 0%, var(--gradient-end) 0%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-main);
+  font-size: 28px;
+  font-weight: 800;
+  transition: background 1s ease;
+}
+
+.ats-score-meta {
+  flex: 1;
+}
+
+.ats-score-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ats-score-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ============================
+   JOB MATCH BAR
+============================ */
+.ats-bar-wrapper {
+  margin-top: 10px;
+}
+
+.ats-bar-track {
+  width: 100%;
+  height: 14px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ats-bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  width: 0%;
+  transition: width 1.2s ease;
+}
+
+.ats-bar-meta {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ats-bar-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ats-bar-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ============================
+   TABLE
+============================ */
+.ats-table-wrapper {
+  overflow-x: auto;
+}
+
+.ats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ats-table th {
+  text-align: left;
+  padding: 10px;
+  background: #f1f5f9;
+  font-weight: 700;
+}
+
+.ats-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ats-table-empty {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ============================
+   LISTS
+============================ */
+.ats-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ats-list li {
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+
+.ats-list-empty {
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ============================
+   LOADING OVERLAY
+============================ */
+.ats-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  backdrop-filter: blur(4px);
+}
+
+.ats-loading-card {
+  background: white;
+  padding: 24px 32px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.ats-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: var(--gradient-start);
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================
+   FOOTER
+============================ */
+.ats-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+}

@@ -1,61 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZemAI - Resume Rewriter</title>
+  <title>ZemAI Resume Rewriter</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="container">
+  <div class="popup-container">
 
-    <!-- Brand Section -->
-    <div class="brand-header">
-      <img src="logo.png" alt="ZemAI" class="brand-logo">
-    </div>
+    <h1>ZemAI Resume Rewriter</h1>
 
-    <h1>Resume Rewriter</h1>
-
-    <!-- Resume Input -->
-    <label for="resumeInput">Your Resume</label>
-    <textarea id="resumeInput" placeholder="Paste your current resume here..."></textarea>
-
-    <!-- Job Description Input -->
-    <label for="jdInput">Job Description</label>
-    <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
-
-    <!-- API Key -->
-    <label for="apiKey">Gemini API Key</label>
-    <input type="password" id="apiKey" placeholder="Enter your Gemini API key" />
-
-    <!-- Rewrite Button -->
-    <button id="rewriteBtn">Rewrite Resume to Match Job Description</button>
-
-    <!-- Output -->
-    <label for="outputResume">Rewritten Resume</label>
-    <textarea id="outputResume" readonly placeholder="Your optimized resume will appear here..."></textarea>
-
-    <!-- Action Buttons -->
-    <button id="copyBtn">Copy Rewritten Resume</button>
-    <button id="downloadDocxBtn">Download as Word (.docx)</button>
-    <button id="openFullPageBtn">Open Full Page</button>
-
-    <p class="note">
-      Your API key is stored locally in your browser. No data leaves your machine except the direct request to Gemini.
-    </p>
-
-    <!-- Hidden export container for Word -->
-    <div id="exportContainer" style="display:none; padding:20px; font-family:Inter, sans-serif;">
-      <h2 style="text-align:center; margin-bottom:20px;">Professional Resume</h2>
-      <div id="exportContent"></div>
-    </div>
+    <button id="openEditorBtn" class="primary-btn">Open Full Editor</button>
+    <button id="openATSBtn" class="secondary-btn">Open ATS Dashboard</button>
 
   </div>
 
-  <!-- LOCAL scripts -->
-  <script src="docx.min.js"></script>
   <script src="popup.js"></script>
-
 </body>
 </html>

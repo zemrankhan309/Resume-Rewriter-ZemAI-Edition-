@@ -20,6 +20,11 @@ It produces clean, ATS‑friendly, professional results — all processed locall
 
 ## 📸 Screenshot
 
+<img width="1860" height="577" alt="Screenshot 2026-05-15 141534" src="https://github.com/user-attachments/assets/8b155a03-c423-4a97-8691-195ec4caff93" />
+
+
+<img width="1087" height="680" alt="Screenshot 2026-05-15 141608" src="https://github.com/user-attachments/assets/e79693c2-2a4a-4b1b-8783-62760bba6fca" />
+
 <img width="1912" height="900" alt="Screenshot 2026-05-15 144254" src="https://github.com/user-attachments/assets/818fb979-81b6-49e5-8240-7a6f79fa9296" />
 
 

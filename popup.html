@@ -1,39 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
   <title>ZemAI Resume Rewriter</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="popup-root">
+  <div class="popup-container">
 
-    <h1 class="popup-title">ZemAI Resume Rewriter</h1>
+    <h1>ZemAI Resume Rewriter</h1>
 
-    <!-- Resume Input -->
-    <label class="popup-label">Your Resume</label>
-    <textarea id="resumeInput" class="popup-textarea" placeholder="Paste your resume here..."></textarea>
-
-    <!-- Job Description Input -->
-    <label class="popup-label">Job Description</label>
-    <textarea id="jdInput" class="popup-textarea" placeholder="Paste the job description here..."></textarea>
-
-    <!-- Rewritten Output -->
-    <label class="popup-label">Rewritten Resume</label>
-    <textarea id="outputBox" class="popup-textarea" placeholder="Your rewritten resume will appear here..."></textarea>
-
-    <!-- Buttons -->
-    <div class="popup-buttons">
-      <button id="rewriteBtn" class="popup-btn primary">Rewrite Resume</button>
-      <button id="copyBtn" class="popup-btn secondary">Copy</button>
-      <button id="downloadDocxBtn" class="popup-btn secondary">Download DOCX</button>
-      <button id="openFullPageBtn" class="popup-btn secondary">Open ATS Dashboard</button>
-
-      <!-- ⭐ NEW BUTTON -->
-      <button id="openEditorBtn" class="popup-btn primary">Open Full Page Editor</button>
-    </div>
+    <button id="openEditorBtn" class="primary-btn">Open Full Editor</button>
+    <button id="openATSBtn" class="secondary-btn">Open ATS Dashboard</button>
 
   </div>
 

@@ -4,10 +4,7 @@
   "version": "1.0",
   "description": "Rewrite resumes, match job descriptions, and generate a full ATS analysis dashboard using Gemini.",
 
-  "permissions": [
-    "storage",
-    "tabs"
-  ],
+  "permissions": ["storage", "tabs"],
 
   "host_permissions": [
     "https://generativelanguage.googleapis.com/*"

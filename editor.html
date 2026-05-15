@@ -10,13 +10,11 @@
 <body>
   <div class="editor-root">
 
-    <!-- Header -->
     <header class="editor-header">
       <h1>ZemAI Resume Editor</h1>
       <p>Rewrite, optimize, and analyze your resume with Gemini‑powered intelligence.</p>
     </header>
 
-    <!-- API KEY INPUT -->
     <section class="editor-card" style="margin: 32px;">
       <h2>Gemini API Key</h2>
       <input 
@@ -27,38 +25,32 @@
       />
     </section>
 
-    <!-- Two‑Column Editor -->
     <main class="editor-grid">
-
-      <!-- Resume Column -->
       <section class="editor-card">
         <h2>Your Resume</h2>
         <textarea id="resumeInput" placeholder="Paste your resume here..."></textarea>
       </section>
 
-      <!-- Job Description Column -->
       <section class="editor-card">
         <h2>Job Description</h2>
         <textarea id="jdInput" placeholder="Paste the job description here..."></textarea>
       </section>
-
     </main>
 
-    <!-- Output Section -->
     <section class="editor-output-card">
       <h2>Rewritten Resume</h2>
       <textarea id="outputBox" placeholder="Your rewritten resume will appear here..."></textarea>
     </section>
 
-    <!-- Action Buttons -->
     <footer class="editor-footer">
       <button id="rewriteBtn" class="editor-btn primary">Rewrite Resume</button>
+      <button id="copyBtn" class="editor-btn secondary">Copy</button>
+      <button id="downloadDocxBtn" class="editor-btn secondary">Download DOCX</button>
       <button id="analyzeBtn" class="editor-btn secondary">Analyze with ATS</button>
     </footer>
 
   </div>
 
-  <!-- Correct JS file -->
   <script src="editor.js"></script>
 </body>
 </html>

@@ -94,13 +94,11 @@ ${jd}
 
   const data = await response.json();
 
-  // NEW: Gemini Flash sometimes returns JSON in different fields
   let raw =
     data.candidates?.[0]?.content?.parts?.[0]?.text ||
     data.candidates?.[0]?.content?.parts?.[0]?.functionCall?.args?.json ||
     "";
 
-  // Remove ```json wrappers if present
   raw = raw.replace(/```json|```/g, "").trim();
 
   try {
@@ -174,4 +172,55 @@ analyzeBtn.addEventListener("click", async () => {
 
   analyzeBtn.disabled = false;
   analyzeBtn.textContent = "Analyze with ATS";
+});
+
+// ===============================
+// COPY BUTTON HANDLER
+// ===============================
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const text = outputBox.value.trim();
+
+  if (!text) {
+    alert("Nothing to copy. Rewrite the resume first.");
+    return;
+  }
+
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Rewritten resume copied to clipboard!"))
+    .catch(() => alert("Clipboard copy failed. Try again."));
+});
+
+// ===============================
+// DOWNLOAD DOCX BUTTON HANDLER
+// ===============================
+document.getElementById("downloadDocxBtn").addEventListener("click", async () => {
+  const text = outputBox.value.trim();
+
+  if (!text) {
+    alert("Nothing to download. Rewrite the resume first.");
+    return;
+  }
+
+  const doc = new docx.Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new docx.Paragraph({
+            children: [new docx.TextRun(text)],
+          }),
+        ],
+      },
+    ],
+  });
+
+  const blob = await docx.Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Rewritten_Resume.docx";
+  a.click();
+
+  URL.revokeObjectURL(url);
 });

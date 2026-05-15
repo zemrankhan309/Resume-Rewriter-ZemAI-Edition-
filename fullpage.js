@@ -1,65 +1,83 @@
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.local.get("atsData", ({ atsData }) => {
 
-    const container = document.getElementById("atsContainer");
+    const overlay = document.getElementById("atsLoadingOverlay");
 
-    if (!container) {
-      console.error("ATS container not found in DOM.");
-      return;
-    }
-
-    // No data found
     if (!atsData) {
-      container.innerHTML = `
-        <h2>No ATS data found</h2>
-        <p>Please run "Analyze with ATS" from the Editor page.</p>
+      overlay.innerHTML = `
+        <div class="ats-loading-card">
+          <p>No ATS data found. Please run "Analyze with ATS" from the editor.</p>
+        </div>
       `;
       return;
     }
 
-    // Render ATS Dashboard
-    container.innerHTML = `
-      <h1>ZemAI ATS Report</h1>
+    // ===============================
+    // 1. ATS SCORE
+    // ===============================
+    const atsScoreValue = document.getElementById("atsScoreValue");
+    if (atsScoreValue) atsScoreValue.textContent = `${atsData.ats_score}%`;
 
-      <section class="ats-section">
-        <h2>ATS Score</h2>
-        <p class="ats-score">${atsData.ats_score}%</p>
-      </section>
+    // ===============================
+    // 2. JOB MATCH BAR
+    // ===============================
+    const jobMatchBar = document.getElementById("jobMatchBar");
+    const jobMatchValue = document.getElementById("jobMatchValue");
 
-      <section class="ats-section">
-        <h2>Job Match</h2>
-        <p class="job-match">${atsData.job_match}%</p>
-      </section>
+    if (jobMatchBar) jobMatchBar.style.width = `${atsData.job_match}%`;
+    if (jobMatchValue) jobMatchValue.textContent = `${atsData.job_match}%`;
 
-      <section class="ats-section">
-        <h2>Keyword Density</h2>
-        <ul>
-          ${atsData.keywords
-            .map(k => `<li>${k.keyword}: ${k.count} (${k.percentage})</li>`)
-            .join("")}
-        </ul>
-      </section>
+    // ===============================
+    // 3. KEYWORD TABLE
+    // ===============================
+    const keywordTableBody = document.getElementById("keywordTableBody");
+    if (keywordTableBody) {
+      keywordTableBody.innerHTML = atsData.keywords
+        .map(
+          (k) => `
+        <tr>
+          <td>${k.keyword}</td>
+          <td>${k.count}</td>
+          <td>${k.percentage}</td>
+        </tr>
+      `
+        )
+        .join("");
+    }
 
-      <section class="ats-section">
-        <h2>Missing / Weak Skills</h2>
-        <ul>
-          ${atsData.missing_skills.map(s => `<li>${s}</li>`).join("")}
-        </ul>
-      </section>
+    // ===============================
+    // 4. MISSING SKILLS
+    // ===============================
+    const missingSkillsList = document.getElementById("missingSkillsList");
+    if (missingSkillsList) {
+      missingSkillsList.innerHTML = atsData.missing_skills.length
+        ? atsData.missing_skills.map((s) => `<li>${s}</li>`).join("")
+        : `<li class="ats-list-empty">No missing skills detected.</li>`;
+    }
 
-      <section class="ats-section">
-        <h2>Suggestions</h2>
-        <ul>
-          ${atsData.suggestions.map(s => `<li>${s}</li>`).join("")}
-        </ul>
-      </section>
+    // ===============================
+    // 5. SUGGESTIONS
+    // ===============================
+    const suggestionsList = document.getElementById("suggestionsList");
+    if (suggestionsList) {
+      suggestionsList.innerHTML = atsData.suggestions.length
+        ? atsData.suggestions.map((s) => `<li>${s}</li>`).join("")
+        : `<li class="ats-list-empty">No suggestions available.</li>`;
+    }
 
-      <section class="ats-section">
-        <h2>Potential Red Flags</h2>
-        <ul>
-          ${atsData.red_flags.map(s => `<li>${s}</li>`).join("")}
-        </ul>
-      </section>
-    `;
+    // ===============================
+    // 6. RED FLAGS
+    // ===============================
+    const redFlagsList = document.getElementById("redFlagsList");
+    if (redFlagsList) {
+      redFlagsList.innerHTML = atsData.red_flags.length
+        ? atsData.red_flags.map((s) => `<li>${s}</li>`).join("")
+        : `<li class="ats-list-empty">No red flags detected.</li>`;
+    }
+
+    // ===============================
+    // 7. REMOVE LOADING OVERLAY
+    // ===============================
+    if (overlay) overlay.style.display = "none";
   });
 });

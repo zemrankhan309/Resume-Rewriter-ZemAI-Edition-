@@ -86,15 +86,37 @@ It produces clean, ATS‑friendly, professional results — all processed locall
 ## 📂 Project Structure
 
 ```
-resume-rewriter/
-│── manifest.json
-│── popup.html
-│── popup.js
-│── styles.css
-│── icon16.png
-│── icon48.png
-│── icon128.png
+Resume-Rewriter-ZemAI-Edition-/
+│
+├── manifest.json
+│
+├── popup.html
+├── popup.js
+├── popup.css
+│
+├── editor.html
+├── editor.js
+├── editor.css
+│
+├── fullpage.html
+├── fullpage.js
+├── fullpage.css
+│
+├── docx.min.js
+│
+├── icons/
+│   ├── icon16.png
+│   ├── icon32.png
+│   ├── icon48.png
+│   └── icon128.png
+│
+├── screenshots/
+│   ├── editor.png
+│   ├── ats-dashboard.png
+│   └── popup.png
+│
 └── README.md
+
 ```
 
 ---

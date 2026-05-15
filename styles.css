@@ -44,7 +44,6 @@ body {
   padding-bottom: 12px;
 }
 
-/* Updated logo styling to prevent "tiny" display */
 .brand-logo {
   width: 120px;
   height: auto;
@@ -107,7 +106,9 @@ textarea:focus, input[type="password"]:focus {
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-#copyBtn {
+#copyBtn,
+#downloadDocxBtn,
+#openFullPageBtn {
   width: 100%;
   margin-top: 10px;
   background: #ffffff;
@@ -119,22 +120,9 @@ textarea:focus, input[type="password"]:focus {
   cursor: pointer;
 }
 
-/* New buttons for PDF + DOCX */
-#downloadPdfBtn, 
-#downloadDocxBtn {
-  width: 100%;
-  margin-top: 10px;
-  background: #ffffff;
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 12px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#downloadPdfBtn:hover, 
-#downloadDocxBtn:hover {
+#copyBtn:hover,
+#downloadDocxBtn:hover,
+#openFullPageBtn:hover {
   background: #f1f5f9;
 }
 

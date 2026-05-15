@@ -1,8 +1,13 @@
 // ===============================
 // GEMINI API CONFIG
 // ===============================
-const API_KEY = "YOUR_API_KEY_HERE";
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+function getApiKey() {
+  const key = document.getElementById("apiKeyInput")?.value.trim();
+  return key || "";
+}
+
+const GEMINI_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 // ===============================
 // DOM ELEMENTS
@@ -16,7 +21,7 @@ const analyzeBtn = document.getElementById("analyzeBtn");
 // ===============================
 // GEMINI CALL #1 — REWRITE RESUME
 // ===============================
-async function rewriteResume(resume, jd) {
+async function rewriteResume(resume, jd, apiKey) {
   const prompt = `
 Rewrite the following resume to be ATS‑optimized, quantified, and aligned with the job description.
 
@@ -36,7 +41,7 @@ Job Description:
 ${jd}
 `;
 
-  const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -51,7 +56,7 @@ ${jd}
 // ===============================
 // GEMINI CALL #2 — SCORE RESUME (JSON ONLY)
 // ===============================
-async function scoreResume(rewrittenResume, jd) {
+async function scoreResume(rewrittenResume, jd, apiKey) {
   const prompt = `
 Analyze the rewritten resume against the job description.
 
@@ -79,7 +84,7 @@ Job Description:
 ${jd}
 `;
 
-  const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -102,8 +107,14 @@ ${jd}
 // REWRITE BUTTON HANDLER
 // ===============================
 rewriteBtn.addEventListener("click", async () => {
+  const apiKey = getApiKey();
   const resume = resumeInput.value.trim();
   const jd = jdInput.value.trim();
+
+  if (!apiKey) {
+    alert("Please enter your Gemini API key.");
+    return;
+  }
 
   if (!resume || !jd) {
     alert("Please paste both resume and job description.");
@@ -113,7 +124,7 @@ rewriteBtn.addEventListener("click", async () => {
   rewriteBtn.disabled = true;
   rewriteBtn.textContent = "Rewriting…";
 
-  const rewritten = await rewriteResume(resume, jd);
+  const rewritten = await rewriteResume(resume, jd, apiKey);
   outputBox.value = rewritten;
 
   rewriteBtn.disabled = false;
@@ -124,8 +135,14 @@ rewriteBtn.addEventListener("click", async () => {
 // ANALYZE BUTTON HANDLER
 // ===============================
 analyzeBtn.addEventListener("click", async () => {
+  const apiKey = getApiKey();
   const rewritten = outputBox.value.trim();
   const jd = jdInput.value.trim();
+
+  if (!apiKey) {
+    alert("Please enter your Gemini API key.");
+    return;
+  }
 
   if (!rewritten || !jd) {
     alert("Please rewrite the resume first.");
@@ -135,7 +152,7 @@ analyzeBtn.addEventListener("click", async () => {
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = "Analyzing…";
 
-  const atsData = await scoreResume(rewritten, jd);
+  const atsData = await scoreResume(rewritten, jd, apiKey);
 
   if (atsData) {
     chrome.storage.local.set({ atsData }, () => {

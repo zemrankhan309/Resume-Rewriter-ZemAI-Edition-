@@ -1,17 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>ZemAI ATS Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="fullpage.css" />
 </head>
-
 <body>
+  <div class="ats-root">
 
-  <div id="atsContainer"></div>
+    <!-- Header / Brand -->
+    <header class="ats-header">
+      <div class="ats-header-left">
+        <h1>ZemAI ATS Report</h1>
+        <p>Objective, AI‑driven analysis of your resume against the target job description.</p>
+      </div>
+      <div class="ats-header-right">
+        <span class="ats-badge">Powered by Gemini</span>
+      </div>
+    </header>
 
-  <!-- MOVE SCRIPT HERE -->
+    <!-- Main Grid -->
+    <main class="ats-grid">
+
+      <!-- Score Card -->
+      <section class="ats-card ats-card-score">
+        <h2>ATS Score</h2>
+        <div class="ats-score-wrapper">
+          <div class="ats-score-ring">
+            <span id="atsScoreValue">--</span>
+          </div>
+          <div class="ats-score-meta">
+            <p class="ats-score-label">Overall ATS Compatibility</p>
+            <p class="ats-score-desc">
+              Higher scores indicate stronger alignment with role requirements, keywords, and structure.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Job Match Card -->
+      <section class="ats-card ats-card-match">
+        <h2>Job Match</h2>
+        <div class="ats-bar-wrapper">
+          <div class="ats-bar-track">
+            <div id="jobMatchBar" class="ats-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="ats-bar-meta">
+            <span id="jobMatchValue" class="ats-bar-value">--%</span>
+            <span class="ats-bar-label">Role alignment based on skills, tools, and responsibilities.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Keyword Density -->
+      <section class="ats-card ats-card-keywords">
+        <h2>Keyword Density</h2>
+        <p class="ats-card-subtitle">
+          Keywords extracted from the job description and found in your rewritten resume.
+        </p>
+        <div class="ats-table-wrapper">
+          <table class="ats-table">
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Count</th>
+                <th>Density</th>
+              </tr>
+            </thead>
+            <tbody id="keywordTableBody">
+              <tr>
+                <td colspan="3" class="ats-table-empty">Waiting for ATS data…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Missing Skills -->
+      <section class="ats-card ats-card-missing">
+        <h2>Missing / Weak Skills</h2>
+        <p class="ats-card-subtitle">
+          Important skills from the job description that are missing or under‑represented in your resume.
+        </p>
+        <ul id="missingSkillsList" class="ats-list">
+          <li class="ats-list-empty">No data yet. Once analysis completes, gaps will appear here.</li>
+        </ul>
+      </section>
+
+      <!-- Suggestions -->
+      <section class="ats-card ats-card-suggestions">
+        <h2>Improvement Suggestions</h2>
+        <p class="ats-card-subtitle">
+          Targeted recommendations to increase your ATS score and job match.
+        </p>
+        <ul id="suggestionsList" class="ats-list">
+          <li class="ats-list-empty">Suggestions will appear here after ATS analysis.</li>
+        </ul>
+      </section>
+
+      <!-- Red Flags -->
+      <section class="ats-card ats-card-redflags">
+        <h2>Potential Red Flags</h2>
+        <p class="ats-card-subtitle">
+          Structural or content issues that may reduce recruiter or ATS confidence.
+        </p>
+        <ul id="redFlagsList" class="ats-list">
+          <li class="ats-list-empty">No red flags detected yet.</li>
+        </ul>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+      <span>Report generated locally by ZemAI. No resume data is stored or shared by this extension.</span>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="atsLoadingOverlay" class="ats-loading-overlay">
+      <div class="ats-loading-card">
+        <div class="ats-spinner"></div>
+        <p>Analyzing your resume against the job description…</p>
+      </div>
+    </div>
+
+  </div>
+
   <script src="fullpage.js"></script>
-
 </body>
 </html>

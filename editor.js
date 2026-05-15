@@ -19,7 +19,7 @@ const rewriteBtn = document.getElementById("rewriteBtn");
 const analyzeBtn = document.getElementById("analyzeBtn");
 
 // ===============================
-// REWRITE RESUME
+// GEMINI CALL #1 — REWRITE RESUME
 // ===============================
 async function rewriteResume(resume, jd, apiKey) {
   const prompt = `
@@ -54,7 +54,7 @@ ${jd}
 }
 
 // ===============================
-// ATS SCORING
+// GEMINI CALL #2 — SCORE RESUME (JSON ONLY)
 // ===============================
 async function scoreResume(rewrittenResume, jd, apiKey) {
   const prompt = `
@@ -93,7 +93,15 @@ ${jd}
   });
 
   const data = await response.json();
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+  // NEW: Gemini Flash sometimes returns JSON in different fields
+  let raw =
+    data.candidates?.[0]?.content?.parts?.[0]?.text ||
+    data.candidates?.[0]?.content?.parts?.[0]?.functionCall?.args?.json ||
+    "";
+
+  // Remove ```json wrappers if present
+  raw = raw.replace(/```json|```/g, "").trim();
 
   try {
     return JSON.parse(raw);
@@ -104,15 +112,22 @@ ${jd}
 }
 
 // ===============================
-// BUTTON: REWRITE
+// REWRITE BUTTON HANDLER
 // ===============================
 rewriteBtn.addEventListener("click", async () => {
   const apiKey = getApiKey();
   const resume = resumeInput.value.trim();
   const jd = jdInput.value.trim();
 
-  if (!apiKey) return alert("Please enter your Gemini API key.");
-  if (!resume || !jd) return alert("Please paste both resume and job description.");
+  if (!apiKey) {
+    alert("Please enter your Gemini API key.");
+    return;
+  }
+
+  if (!resume || !jd) {
+    alert("Please paste both resume and job description.");
+    return;
+  }
 
   rewriteBtn.disabled = true;
   rewriteBtn.textContent = "Rewriting…";
@@ -125,15 +140,22 @@ rewriteBtn.addEventListener("click", async () => {
 });
 
 // ===============================
-// BUTTON: ANALYZE
+// ANALYZE BUTTON HANDLER
 // ===============================
 analyzeBtn.addEventListener("click", async () => {
   const apiKey = getApiKey();
   const rewritten = outputBox.value.trim();
   const jd = jdInput.value.trim();
 
-  if (!apiKey) return alert("Please enter your Gemini API key.");
-  if (!rewritten || !jd) return alert("Please rewrite the resume first.");
+  if (!apiKey) {
+    alert("Please enter your Gemini API key.");
+    return;
+  }
+
+  if (!rewritten || !jd) {
+    alert("Please rewrite the resume first.");
+    return;
+  }
 
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = "Analyzing…";
@@ -147,36 +169,9 @@ analyzeBtn.addEventListener("click", async () => {
       });
     });
   } else {
-    alert("Failed to generate ATS analysis.");
+    alert("Failed to generate ATS analysis. Check console for details.");
   }
 
   analyzeBtn.disabled = false;
   analyzeBtn.textContent = "Analyze with ATS";
-});
-
-// ===============================
-// BUTTON: COPY
-// ===============================
-document.getElementById("copyBtn").addEventListener("click", () => {
-  navigator.clipboard.writeText(outputBox.value);
-  alert("Copied!");
-});
-
-// ===============================
-// BUTTON: DOWNLOAD DOCX
-// ===============================
-document.getElementById("downloadDocxBtn").addEventListener("click", () => {
-  const text = outputBox.value.trim();
-  if (!text) return alert("Please rewrite the resume first.");
-
-  const blob = new Blob([text], {
-    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "rewritten_resume.docx";
-  a.click();
-  URL.revokeObjectURL(url);
 });

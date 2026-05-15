@@ -19,6 +19,50 @@ const rewriteBtn = document.getElementById("rewriteBtn");
 const analyzeBtn = document.getElementById("analyzeBtn");
 
 // ===============================
+// UNIVERSAL GEMINI ERROR HANDLER
+// ===============================
+function handleGeminiError(status, err) {
+  if (status === 429) {
+    alert("Gemini API quota reached. Please wait or use a new API key.");
+    return;
+  }
+
+  console.error("Gemini API error:", status, err);
+  alert("Gemini API error occurred. Check console for details.");
+}
+
+// ===============================
+// SAFE FETCH WRAPPER
+// ===============================
+async function safeGeminiFetch(url, payload) {
+  let response;
+
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+  } catch (networkError) {
+    alert("Network error: Unable to reach Gemini API.");
+    console.error(networkError);
+    return null;
+  }
+
+  if (!response.ok) {
+    let err = {};
+    try {
+      err = await response.json();
+    } catch (_) {}
+
+    handleGeminiError(response.status, err);
+    return null;
+  }
+
+  return response.json();
+}
+
+// ===============================
 // GEMINI CALL #1 — REWRITE RESUME
 // ===============================
 async function rewriteResume(resume, jd, apiKey) {
@@ -41,20 +85,20 @@ Job Description:
 ${jd}
 `;
 
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  const data = await safeGeminiFetch(
+    `${GEMINI_URL}?key=${apiKey}`,
+    {
       contents: [{ parts: [{ text: prompt }] }]
-    })
-  });
+    }
+  );
 
-  const data = await response.json();
+  if (!data) return "";
+
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
 // ===============================
-// GEMINI CALL #2 — SCORE RESUME (JSON ONLY)
+// GEMINI CALL #2 — SCORE RESUME
 // ===============================
 async function scoreResume(rewrittenResume, jd, apiKey) {
   const prompt = `
@@ -84,15 +128,14 @@ Job Description:
 ${jd}
 `;
 
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  const data = await safeGeminiFetch(
+    `${GEMINI_URL}?key=${apiKey}`,
+    {
       contents: [{ parts: [{ text: prompt }] }]
-    })
-  });
+    }
+  );
 
-  const data = await response.json();
+  if (!data) return null;
 
   let raw =
     data.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -117,20 +160,20 @@ rewriteBtn.addEventListener("click", async () => {
   const resume = resumeInput.value.trim();
   const jd = jdInput.value.trim();
 
-  if (!apiKey) {
-    alert("Please enter your Gemini API key.");
-    return;
-  }
-
-  if (!resume || !jd) {
-    alert("Please paste both resume and job description.");
-    return;
-  }
+  if (!apiKey) return alert("Please enter your Gemini API key.");
+  if (!resume || !jd) return alert("Please paste both resume and job description.");
 
   rewriteBtn.disabled = true;
   rewriteBtn.textContent = "Rewriting…";
 
   const rewritten = await rewriteResume(resume, jd, apiKey);
+
+  if (!rewritten) {
+    rewriteBtn.disabled = false;
+    rewriteBtn.textContent = "Rewrite Resume";
+    return;
+  }
+
   outputBox.value = rewritten;
 
   rewriteBtn.disabled = false;
@@ -145,30 +188,25 @@ analyzeBtn.addEventListener("click", async () => {
   const rewritten = outputBox.value.trim();
   const jd = jdInput.value.trim();
 
-  if (!apiKey) {
-    alert("Please enter your Gemini API key.");
-    return;
-  }
-
-  if (!rewritten || !jd) {
-    alert("Please rewrite the resume first.");
-    return;
-  }
+  if (!apiKey) return alert("Please enter your Gemini API key.");
+  if (!rewritten || !jd) return alert("Please rewrite the resume first.");
 
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = "Analyzing…";
 
   const atsData = await scoreResume(rewritten, jd, apiKey);
 
-  if (atsData) {
-    chrome.storage.local.set({ atsData }, () => {
-      chrome.tabs.create({
-        url: chrome.runtime.getURL("fullpage.html")
-      });
-    });
-  } else {
-    alert("Failed to generate ATS analysis. Check console for details.");
+  if (!atsData) {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = "Analyze with ATS";
+    return;
   }
+
+  chrome.storage.local.set({ atsData }, () => {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("fullpage.html")
+    });
+  });
 
   analyzeBtn.disabled = false;
   analyzeBtn.textContent = "Analyze with ATS";
@@ -179,11 +217,7 @@ analyzeBtn.addEventListener("click", async () => {
 // ===============================
 document.getElementById("copyBtn").addEventListener("click", () => {
   const text = outputBox.value.trim();
-
-  if (!text) {
-    alert("Nothing to copy. Rewrite the resume first.");
-    return;
-  }
+  if (!text) return alert("Nothing to copy. Rewrite the resume first.");
 
   navigator.clipboard.writeText(text)
     .then(() => alert("Rewritten resume copied to clipboard!"))
@@ -195,11 +229,7 @@ document.getElementById("copyBtn").addEventListener("click", () => {
 // ===============================
 document.getElementById("downloadDocxBtn").addEventListener("click", async () => {
   const text = outputBox.value.trim();
-
-  if (!text) {
-    alert("Nothing to download. Rewrite the resume first.");
-    return;
-  }
+  if (!text) return alert("Nothing to download. Rewrite the resume first.");
 
   const doc = new docx.Document({
     sections: [

@@ -1,182 +1,163 @@
-console.log("popup.js loaded");
+// ===============================
+// GEMINI API CONFIG
+// ===============================
+const API_KEY = "YOUR_API_KEY_HERE";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
-/* ============================================================
-   CLEAN MARKDOWN / REMOVE SYMBOLS
-============================================================ */
-function cleanMarkdown(text) {
-    return text
-        .replace(/\*\*\*/g, "")
-        .replace(/\*\*/g, "")
-        .replace(/\*/g, "")
-        .replace(/#/g, "")
-        .replace(/_/g, "")
-        .replace(/`/g, "")
-        .replace(/\•/g, "-")
-        .replace(/\·/g, "-")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-}
+// ===============================
+// DOM ELEMENTS
+// ===============================
+const resumeInput = document.getElementById("resumeInput");
+const jdInput = document.getElementById("jdInput");
+const rewriteBtn = document.getElementById("rewriteBtn");
+const outputBox = document.getElementById("outputBox");
+const copyBtn = document.getElementById("copyBtn");
+const downloadDocxBtn = document.getElementById("downloadDocxBtn");
+const openFullPageBtn = document.getElementById("openFullPageBtn");
 
-/* ============================================================
-   GEMINI REWRITE FUNCTION (STRICT JSON PROMPT)
-============================================================ */
-async function rewriteWithGemini(resume, jd, apiKey) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
-
-    const prompt = `
-You are an ATS optimization engine.
-
-Your output MUST contain TWO sections in this exact order:
-
-========================
-SECTION 1 — REWRITTEN RESUME
-========================
-Return ONLY the rewritten resume in clean ATS‑friendly formatting.
+// ===============================
+// GEMINI CALL #1 — REWRITE RESUME
+// ===============================
+async function rewriteResume(resume, jd) {
+  const prompt = `
+Rewrite the following resume to be ATS‑optimized, quantified, and aligned with the job description.
 
 RULES:
-- Use section headers in ALL CAPS (SUMMARY, SKILLS, EXPERIENCE, EDUCATION).
-- Use clean bullet points using "-" only.
-- Use UPPERCASE for job titles and company names.
-- Do NOT use markdown (**bold**, #, *, etc.).
-- Do NOT invent experience.
-- Make the rewrite achievement‑focused and quantified.
+- Use clean ATS‑friendly formatting.
+- Use ALL CAPS for section headers.
+- Use "-" for bullet points.
+- No markdown.
+- No commentary.
+- No JSON.
+- Output ONLY the rewritten resume.
 
-========================
-SECTION 2 — ATS_DATA JSON
-========================
-After the resume, output EXACTLY the following JSON block.
-No commentary. No explanation. No extra text before or after.
-The JSON MUST be valid and MUST follow this structure:
-
-ATS_DATA: {
-  "ats_score": 85,
-  "job_match": 92,
-  "keywords": [
-      {"keyword": "Azure", "count": 5, "percentage": "3.2%"}
-  ]
-}
-If you do NOT output this JSON block, the task is considered incomplete.
 Resume:
 ${resume}
 
 Job Description:
 ${jd}
-
-Begin now.
 `;
 
-    const body = {
-        contents: [{ parts: [{ text: prompt }] }]
-    };
+  const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }]
+    })
+  });
 
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
-
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
-/* ============================================================
-   REWRITE BUTTON HANDLER
-============================================================ */
-document.getElementById("rewriteBtn").addEventListener("click", async () => {
-    const resume = document.getElementById("resumeInput").value.trim();
-    const jd = document.getElementById("jdInput").value.trim();
-    const apiKey = document.getElementById("apiKey").value.trim();
+// ===============================
+// GEMINI CALL #2 — SCORE RESUME (JSON ONLY)
+// ===============================
+async function scoreResume(rewrittenResume, jd) {
+  const prompt = `
+Analyze the rewritten resume against the job description.
 
-    if (!resume || !jd) {
-        alert("Please paste both your resume and the job description.");
-        return;
-    }
-    if (!apiKey) {
-        alert("Please enter your Gemini API key.");
-        return;
-    }
+Return ONLY valid JSON in this exact structure:
 
-    document.getElementById("outputResume").value = "Rewriting… please wait.";
+{
+  "ats_score": 0,
+  "job_match": 0,
+  "keywords": [
+    { "keyword": "Azure", "count": 0, "percentage": "0%" }
+  ],
+  "missing_skills": [],
+  "suggestions": [],
+  "red_flags": []
+}
 
-    try {
-        const rewritten = await rewriteWithGemini(resume, jd, apiKey);
+NO commentary.
+NO markdown.
+NO extra text.
 
-        /* Extract JSON */
-        let atsData = null;
-        const jsonMatch = rewritten.match(/ATS_DATA[\s:]*({[\s\S]*?})/);
+Resume:
+${rewrittenResume}
 
-        if (jsonMatch) {
-            try {
-                let jsonText = jsonMatch[1]
-                    .replace(/,\s*}/g, "}")
-                    .replace(/,\s*]/g, "]");
-                atsData = JSON.parse(jsonText);
-            } catch (e) {
-                console.error("JSON Parse Error:", e);
-            }
-        }
+Job Description:
+${jd}
+`;
 
-        /* Clean resume */
-        const cleanedResume = rewritten.replace(/ATS_DATA[\s\S]*$/, "").trim();
-        document.getElementById("outputResume").value = cleanMarkdown(cleanedResume);
+  const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }]
+    })
+  });
 
-        /* Show ATS summary in alert (simple fallback) */
-        if (atsData) {
-            alert(
-                "ATS Score: " + atsData.ats_score +
-                "\nJob Match: " + atsData.job_match + "%" +
-                "\n\nTop Keyword: " + atsData.keywords[0].keyword
-            );
-        }
+  const data = await response.json();
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-    } catch (err) {
-        console.error(err);
-        document.getElementById("outputResume").value =
-            "AI rewriting failed. Check your API key or internet connection.";
-    }
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("JSON parse error:", raw);
+    return null;
+  }
+}
+
+// ===============================
+// MAIN WORKFLOW — REWRITE + SCORE
+// ===============================
+rewriteBtn.addEventListener("click", async () => {
+  const resume = resumeInput.value.trim();
+  const jd = jdInput.value.trim();
+
+  if (!resume || !jd) {
+    alert("Please paste both resume and job description.");
+    return;
+  }
+
+  rewriteBtn.disabled = true;
+  rewriteBtn.textContent = "Rewriting…";
+
+  // 1️⃣ Rewrite Resume
+  const rewritten = await rewriteResume(resume, jd);
+  outputBox.value = rewritten;
+
+  // 2️⃣ Score Resume
+  const atsData = await scoreResume(rewritten, jd);
+
+  if (atsData) {
+    chrome.storage.local.set({ atsData });
+  }
+
+  rewriteBtn.disabled = false;
+  rewriteBtn.textContent = "Rewrite Resume";
 });
 
-/* ============================================================
-   COPY BUTTON
-============================================================ */
-document.getElementById("copyBtn").addEventListener("click", () => {
-    const text = document.getElementById("outputResume").value;
-    navigator.clipboard.writeText(text);
-    alert("Rewritten resume copied.");
+// ===============================
+// COPY BUTTON
+// ===============================
+copyBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(outputBox.value);
+  copyBtn.textContent = "Copied!";
+  setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
 });
 
-/* ============================================================
-   DOCX EXPORT
-============================================================ */
-document.getElementById("downloadDocxBtn").addEventListener("click", async () => {
-    const text = document.getElementById("outputResume").value.trim();
-    if (!text) return alert("No rewritten resume to export.");
+// ===============================
+// DOWNLOAD DOCX
+// ===============================
+downloadDocxBtn.addEventListener("click", () => {
+  const content = outputBox.value;
+  const blob = new Blob([content], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+  const url = URL.createObjectURL(blob);
 
-    const paragraphs = text.split("\n").map(line => new docx.Paragraph(line));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Rewritten_Resume.docx";
+  a.click();
 
-    const doc = new docx.Document({
-        sections: [{ properties: {}, children: paragraphs }]
-    });
-
-    const blob = await docx.Packer.toBlob(doc);
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "resume.docx";
-    a.click();
-
-    URL.revokeObjectURL(url);
+  URL.revokeObjectURL(url);
 });
 
-/* ============================================================
-   OPEN FULL PAGE — FIXED
-============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("openFullPageBtn");
-    if (btn) {
-        btn.addEventListener("click", () => {
-            chrome.tabs.create({ url: chrome.runtime.getURL("popup.html") });
-        });
-    }
+// ===============================
+// OPEN FULL ATS DASHBOARD
+// ===============================
+openFullPageBtn.addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("fullpage.html") });
 });
